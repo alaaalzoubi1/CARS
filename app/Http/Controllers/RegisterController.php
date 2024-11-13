@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegisterController extends Controller
 {
@@ -17,8 +18,7 @@ class RegisterController extends Controller
         }
 
         $user = $this->create($request->all());
-        $credentials = request(['email', 'password']);
-        $token = auth()->attempt($credentials);
+        $token = JWTAuth::fromUser($user);
         return response()->json(['message' => 'Registration successful!', 'user' => $token], 201);
     }
 
@@ -27,7 +27,6 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8'],
         ]);
     }
 
@@ -36,7 +35,7 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+//            'password' => ($data['password']),
         ]);
     }
 }

@@ -14,13 +14,18 @@ return new class extends Migration
         Schema::create('cars', function (Blueprint $table) {
              $table->id();
              $table->string('trademark');
-             $table->date('date');
+             $table->string('model');
+             $table->string('delivery');
              $table->text('details');
              $table->unsignedBigInteger('rent_id');
              $table->foreign('rent_id')->references('id')->on('rents')->onDelete('cascade');
-             $table->text('explication');
+             $table->string('insurance');
+             $table->string('KMs');
+             $table->string('deposit');
+             $table->string('min_age');
              $table->unsignedBigInteger('category_id');
-             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade'); $table->timestamps(); // Adds created_at and updated_at columns });
+             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+             $table->timestamps();
         });
     }
 

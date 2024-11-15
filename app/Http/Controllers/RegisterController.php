@@ -18,8 +18,10 @@ class RegisterController extends Controller
         }
 
         $user = $this->create($request->all());
-        $token = JWTAuth::fromUser($user);
-        return response()->json(['message' => 'Registration successful!', 'user' => $token], 201);
+        $user->assignRole('user');
+        $credentials = $request->only('email', 'password');
+        $token = auth()->attempt($credentials);
+        return response()->json(['message' => 'Registration successful!', 'token' => $token], 201);
     }
 
     protected function validator(array $data)
@@ -27,6 +29,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required','string','min:8'],
         ]);
     }
 
@@ -35,7 +38,7 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-//            'password' => ($data['password']),
+            'password' => Hash::make($data['password']),
         ]);
     }
 }

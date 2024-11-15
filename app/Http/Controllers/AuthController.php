@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -16,7 +17,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login','register']]);
     }
 
     /**
@@ -24,16 +25,23 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function login(Request $request)
     {
-        $user = User::where('email',request('email') )->first();
-        if (! $token = JWTAuth::fromUser($user)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->respondWithToken($token);
+        $credentials = $request->only('email', 'password');
+//        try {
+            $token = Auth::attempt($credentials);
+            if (!$token) {
+                return response()->json(['success' => false, 'error' => 'Invalid credentials'], 401);
+            }
+            return $this->respondWithToken($token);
+//        } catch (\Exception $e) {
+//            return response()->json(['success' => false, 'error' => 'Failed to login, please try again.'], 500);
+//        }
     }
-
+    public function register(Request $request)
+    {
+        (new RegisterController)->register($request);
+    }
     /**
      * Get the authenticated User.
      *

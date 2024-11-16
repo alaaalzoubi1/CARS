@@ -20,5 +20,5 @@ class CarImage extends Model
     {
         return $this->belongsTo(Car::class);
     }
-    public function images() { return $this->hasMany(CarImage::class); }
+
 }

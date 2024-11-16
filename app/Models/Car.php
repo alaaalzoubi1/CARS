@@ -9,9 +9,7 @@ class Car extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'trademark', 'date', 'details', 'rent_id', 'explication', 'category_id'
-    ];
+    protected $fillable = [ 'trademark', 'model', 'delivery', 'details', 'rent_id', 'insurance', 'KMs', 'deposit', 'min_age', 'category_id', ];
 
     /**
      * Get the rent associated with the car.
@@ -34,4 +32,5 @@ class Car extends Model
     {
         return $this->hasOne(CarFeature::class);
     }
+    public function images() { return $this->hasMany(CarImage::class); }
 }

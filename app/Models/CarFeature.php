@@ -9,23 +9,22 @@ class CarFeature extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'gear',
-        'engine',
-        'color',
-        'seats',
-        'doors',
-        'luggage',
-        'sensors',
-        'bluetooth',
-        'gcc',
-        'camera',
-        'lcd',
-        'safety',
-        'radio',
-        'Mb3_CD',
-        'car_id',
-    ];
+    protected $fillable =
+        [   'gear',
+            'engine',
+            'color',
+            'seats',
+            'doors',
+            'luggage',
+            'sensors',
+            'bluetooth',
+            'gcc',
+            'camera',
+            'lcd',
+            'safety',
+            'radio',
+            'Mb3_CD',
+            'car_id', ];
 
     /**
      * Get the car that owns the features.

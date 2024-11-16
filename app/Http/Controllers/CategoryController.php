@@ -80,7 +80,11 @@ class CategoryController extends Controller
             'name' => 'sometimes|string|max:255',
             'icon' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
+        if (!is_numeric($request->id) || $request->id <= 0) {
+            return response()->json([
+                'message' => 'Invalid ID format',
+            ], 400);
+        }
         $category = Category::find($request->id);
 
         if (!$category) {
@@ -108,6 +112,4 @@ class CategoryController extends Controller
             'category' => ['name' => $category->name ,'icon' => $category->icon,'id' => $category->id],
         ], 200);
     }
-
-
 }

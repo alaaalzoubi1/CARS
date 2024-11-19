@@ -17,6 +17,7 @@ class CreateCarImagesTable extends Migration
             $table->id(); // Primary Key (PK)
             $table->unsignedBigInteger('car_id'); // Foreign Key (FK)
             $table->string('image'); // To store the image path or URL
+            $table->boolean('is_main')->default(false);
             $table->timestamps(); // Adds created_at and updated_at columns
 
             // Foreign key constraint

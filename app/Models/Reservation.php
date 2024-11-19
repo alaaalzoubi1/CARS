@@ -9,9 +9,7 @@ class Reservation extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id', 'car_id', 'with_driver', 'start', 'end', 'status'
-    ];
+    protected $fillable = [ 'user_id', 'car_id', 'with_driver', 'start', 'end', 'status',];
 
     /**
      * Get the user associated with the reservation.

@@ -53,6 +53,7 @@ class CarRequest extends FormRequest
             'radio' => 'required|boolean',
             'Mb3_CD' => 'required|boolean',
             'images' => 'required|array',
+            'main_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ];
     }

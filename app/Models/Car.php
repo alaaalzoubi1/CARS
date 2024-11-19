@@ -9,7 +9,7 @@ class Car extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'trademark', 'model', 'delivery', 'details', 'rent_id', 'insurance', 'KMs', 'deposit', 'min_age', 'category_id', ];
+    protected $fillable = [ 'trademark', 'model', 'delivery', 'details', 'rent_id', 'insurance', 'KMs', 'deposit', 'min_age', 'category_id','is_hidden' ];
 
     /**
      * Get the rent associated with the car.

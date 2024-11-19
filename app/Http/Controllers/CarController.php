@@ -70,7 +70,13 @@ class CarController extends Controller
                 'Mb3_CD' => $validatedData['Mb3_CD'],
                 'car_id' => $car->id,
             ]);
-
+            $imageName = time() . '-' . $validatedData['main_image']->getClientOriginalName();
+            $imagePath = $validatedData['main_image']->storeAs('car_images', $imageName, 'public');
+            CarImage::create([
+                'car_id' => $car->id,
+                'image' => $imagePath,
+                'is_main' => true,
+            ]);
             // Handle image uploads
             foreach ($request->file('images') as $image) {
                 $imageName = time() . '-' . $image->getClientOriginalName();
@@ -296,46 +302,77 @@ class CarController extends Controller
             'message' => 'Image deleted successfully'
         ], 200);
     }
-    public function addImages(Request $request)
+    public function addImage(Request $request)
     {
-
         $validatedData = $request->validate([
-            'car_id' => 'required',
-            'images' => 'required|array',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'car_id' => 'required|exists:cars,id',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_main' => 'required|boolean',
         ]);
+
         if (!is_numeric($request->car_id) || $request->car_id <= 0) {
             return response()->json([
                 'message' => 'Invalid ID format',
             ], 400);
         }
-        // Check if the car exists
-        if (!Car::where('id', $request->car_id)->exists()) {
+
+        // Check if the car exists (validation already ensures this)
+        $car = Car::find($request->car_id);
+        if (!$car) {
             return response()->json([
-                'message' => 'Car not found'
+                'message' => 'Car not found',
             ], 404);
         }
+        // Handle the image upload
+        $imageName = time() . '-' . $request->file('image')->getClientOriginalName();
+        $imagePath = $request->file('image')->storeAs('car_images', $imageName, 'public');
 
-        // Handle image uploads
-        $imagePaths = [];
-        foreach ($request->file('images') as $image) {
-            $imageName = time() . '-' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('car_images', $imageName, 'public');
+        if ($validatedData['is_main']) {
+            // Check if there's an existing main image for the car
+            $mainImage = CarImage::where('car_id', $validatedData['car_id'])
+                ->where('is_main', true)
+                ->first();
 
-            // Store the image record in the database
-            $carImage = CarImage::create([
-                'car_id' => $validatedData['car_id'],
-                'image' => $imagePath,
-            ]);
+            if ($mainImage) {
+                // Update the existing main image
+                Storage::disk('public')->delete($mainImage->image);
+                $mainImage->image = $imagePath;
+                $mainImage->save();
 
-            $imagePaths[] = $carImage->image;
+                return response()->json([
+                    'message' => 'Main image updated successfully',
+                    'image' => $mainImage,
+                ], 200);
+            }
         }
 
+        // Create a new image record in the database
+        $carImage = CarImage::create([
+            'car_id' => $validatedData['car_id'],
+            'image' => $imagePath,
+            'is_main' => $validatedData['is_main'],
+        ]);
+
         return response()->json([
-            'message' => 'Images added successfully',
-            'images' => $imagePaths
+            'message' => 'Image added successfully',
+            'image' => $carImage,
         ], 201);
     }
+    public function hide_unhide_car($id)
+    {
+        if (!is_numeric($id) || $id <= 0) {
+            return response()->json([
+                'message' => 'Invalid ID format',
+            ], 400);
+        }
+        $car = Car::where('id',$id)->first();
+        $car->is_hidden = !$car->is_hidden;
+        $car->save();
+        return response()->json([
+           'is_hidden' => $car->is_hidden
+        ]);
+    }
+
 
 
 }

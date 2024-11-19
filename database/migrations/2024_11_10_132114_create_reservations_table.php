@@ -20,7 +20,7 @@ class CreateReservationsTable extends Migration
             $table->boolean('with_driver');
             $table->date('start');
             $table->date('end');
-            $table->enum('status', ['pending', 'canceled', 'sticky']);
+            $table->enum('status', ['pending', 'canceled', 'approved']);
             $table->timestamps(); // Adds created_at and updated_at columns
 
             // Foreign key constraints

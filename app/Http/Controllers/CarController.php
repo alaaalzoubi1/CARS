@@ -365,11 +365,35 @@ class CarController extends Controller
                 'message' => 'Invalid ID format',
             ], 400);
         }
+
         $car = Car::where('id',$id)->first();
+        if (!$car) {
+            return response()->json([
+                'message' => 'Car not found',
+            ], 404);
+        }
         $car->is_hidden = !$car->is_hidden;
         $car->save();
         return response()->json([
            'is_hidden' => $car->is_hidden
+        ]);
+    }
+    public function delete($id)
+    {
+        if (!is_numeric($id) || $id <= 0) {
+            return response()->json([
+                'message' => 'Invalid ID format',
+            ], 400);
+        }
+        $car = Car::find($id);
+        if (!$car) {
+            return response()->json([
+                'message' => 'Car not found',
+            ], 404);
+        }
+        $car->delete();
+        return response()->json([
+            'message' => 'car deleted successfully'
         ]);
     }
 

@@ -31,6 +31,5 @@ Route::middleware(['auth:api', 'admin.role'])->group(function () {
     Route::get('reservations/approved', [ReservationController::class, 'getApproved']);
     Route::post('reservations/changeStatus', [ReservationController::class, 'updateStatus']);
     Route::get('hide-unhide/{id}',[CarController::class,'hide_unhide_car']);
-
-
+    Route::delete('delete/{id}',[CarController::class,'delete']);
 });

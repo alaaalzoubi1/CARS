@@ -14,12 +14,13 @@ class ReservationController extends Controller
      */
     public function getAll()
     {
-        $reservations = Reservation::all();
+        $reservations = Reservation::with(['user:id,name', 'car'])->get();
 
         return response()->json([
             'reservations' => $reservations,
         ], 200);
     }
+
 
     /**
      * Get pending reservations.
@@ -28,7 +29,7 @@ class ReservationController extends Controller
      */
     public function getPending()
     {
-        $reservations = Reservation::where('status', 'pending')->get();
+        $reservations = Reservation::with(['user:id,name', 'car'])->where('status', 'pending')->get();
 
         return response()->json([
             'reservations' => $reservations,
@@ -42,7 +43,7 @@ class ReservationController extends Controller
      */
     public function getCanceled()
     {
-        $reservations = Reservation::where('status', 'canceled')->get();
+        $reservations = Reservation::with(['user:id,name', 'car'])->where('status', 'canceled')->get();
 
         return response()->json([
             'reservations' => $reservations,
@@ -56,7 +57,7 @@ class ReservationController extends Controller
      */
     public function getApproved()
     {
-        $reservations = Reservation::where('status', 'approved')->get();
+        $reservations = Reservation::with(['user:id,name', 'car'])->where('status', 'approved')->get();
 
         return response()->json([
             'reservations' => $reservations,

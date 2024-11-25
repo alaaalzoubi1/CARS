@@ -38,7 +38,7 @@ class CarController extends Controller
                 'monthly_with_driver' => $validatedData['monthly_with_driver'],
             ]);
 
-            // Create car
+            // Create car with new date columns
             $car = Car::create([
                 'trademark' => $validatedData['trademark'],
                 'model' => $validatedData['model'],
@@ -50,6 +50,8 @@ class CarController extends Controller
                 'deposit' => $validatedData['deposit'],
                 'min_age' => $validatedData['min_age'],
                 'category_id' => $validatedData['category_id'],
+                'date_of_manufacture' => $validatedData['date_of_manufacture'],
+                'registration_date' => $validatedData['registration_date'],
             ]);
 
             // Create car features
@@ -77,6 +79,7 @@ class CarController extends Controller
                 'image' => $imagePath,
                 'is_main' => true,
             ]);
+
             // Handle image uploads
             foreach ($request->file('images') as $image) {
                 $imageName = time() . '-' . $image->getClientOriginalName();
@@ -103,6 +106,7 @@ class CarController extends Controller
             ], 500);
         }
     }
+
     public function showByCategory($category_id)
     {
         if (!is_numeric($category_id) || $category_id <= 0) {
@@ -173,12 +177,16 @@ class CarController extends Controller
             'daily_with_driver' => 'sometimes|numeric',
             'weekly_with_driver' => 'sometimes|numeric',
             'monthly_with_driver' => 'sometimes|numeric',
+            'date_of_manufacture' => 'sometimes|integer|min:1900|max:' . date('Y'),
+            'registration_date' => 'sometimes|integer|min:1900|max:' . date('Y'),
         ]);
+
         if (!is_numeric($id) || $id <= 0) {
             return response()->json([
                 'message' => 'Invalid ID format',
             ], 400);
         }
+
         // Find the car by ID
         $car = Car::find($id);
 
@@ -193,7 +201,10 @@ class CarController extends Controller
 
         try {
             // Update car details
-            $car->update($validatedData);
+            $car->update(array_merge($validatedData, [
+                'date_of_manufacture' => $validatedData['date_of_manufacture'] ?? $car->date_of_manufacture,
+                'registration_date' => $validatedData['registration_date'] ?? $car->registration_date,
+            ]));
 
             // Update rent details if provided
             if ($request->hasAny(['daily', 'weekly', 'monthly', 'daily_with_driver', 'weekly_with_driver', 'monthly_with_driver'])) {
@@ -206,6 +217,7 @@ class CarController extends Controller
                     'monthly_with_driver'
                 ]));
             }
+
             DB::commit();
 
             return response()->json([
@@ -222,6 +234,7 @@ class CarController extends Controller
             ], 500);
         }
     }
+
     public function updateDetails(Request $request,$id)
     {
         if (!is_numeric($id) || $id <= 0) {

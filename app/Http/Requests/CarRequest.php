@@ -54,7 +54,21 @@ class CarRequest extends FormRequest
             'Mb3_CD' => 'required|boolean',
             'images' => 'required|array',
             'main_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'date_of_manufacture' => [
+                'required',
+                'integer',
+                'min:1900',
+                'max:' . date('Y'),
+            ],
+
+            'registration_date' => [
+                'required',
+                'integer',
+                'min:1900',
+                'max:' . date('Y'),
+            ],
+
         ];
     }
 }

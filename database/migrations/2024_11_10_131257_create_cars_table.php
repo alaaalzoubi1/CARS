@@ -25,6 +25,8 @@ return new class extends Migration
              $table->string('min_age');
              $table->unsignedBigInteger('category_id');
              $table->boolean('is_hidden')->default(false);
+             $table->year('date_of_manufacture');
+             $table->year('registration_date');
              $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
              $table->timestamps();
         });

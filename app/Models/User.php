@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
@@ -45,6 +46,7 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
     public function reservations(){
         $this->hasMany(Reservation::class);
     }
@@ -67,5 +69,9 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+    public function sendPasswordResetNotification($token) {
+        $url = config('app.url') . '/user/reset-password?token=' . $token;
+        $this->notify(new ResetPasswordNotification($url));
     }
 }

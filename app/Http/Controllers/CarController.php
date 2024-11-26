@@ -11,6 +11,7 @@ use App\Models\Rent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CarController extends Controller
 {
@@ -122,7 +123,7 @@ class CarController extends Controller
 
         $cars = Car::where('category_id', $category_id)
             ->with(['rent', 'images' => function($query) {
-                $query->limit(1);
+                $query->where('is_main',true)->first();
             }])
             ->get();
 
@@ -408,6 +409,38 @@ class CarController extends Controller
         return response()->json([
             'message' => 'car deleted successfully'
         ]);
+    }
+    /**
+     * Display a paginated list of cars with main image.
+     * * * @return \Illuminate\Http\JsonResponse
+     */
+    public function showCars()
+    { // Retrieve cars where is_hidden is false and paginate results by 5
+         $cars = Car::where('is_hidden', false)
+             ->with(['images' => function($query)
+             { $query->where('is_main', true);
+             }])
+             ->paginate(5);
+         return response()->json([
+             'cars' => $cars, ]
+             );
+    }
+    /**
+     * Display a paginated list of cars by category with main image.
+     * * * @param int $category_id
+     * * @return \Illuminate\Http\JsonResponse
+     */
+    public function showCarsByCategory_user($category_id)
+    { // Retrieve cars where is_hidden is false and category_id matches, paginate results by 5
+         $cars = Car::where('is_hidden', false)
+             ->where('category_id', $category_id)
+             ->with(['images' => function($query)
+             { $query->where('is_main', true);
+             }])
+             ->paginate(10);
+         return response()->json([
+             'cars' => $cars, ]
+         );
     }
 
 

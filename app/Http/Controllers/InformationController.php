@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Information;
+use App\Models\Link;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,7 +34,7 @@ class InformationController extends Controller
                 $information->address = $validatedData['address'];
             if ($request->exists('about_us'))
                 $information->about_us = $validatedData['about_us'];
-            
+
             if ($request->hasFile('logo')) {
                 // Handle the logo upload
                 $logoName = time() . '-' . $request->file('logo')->getClientOriginalName();
@@ -142,4 +143,21 @@ class InformationController extends Controller
             'message' => 'Information deleted successfully',
         ], 200);
     }
+    public function show_user()
+    {
+        // Get the information (only one row should exist)
+        $information = Information::select('address','about_us','logo','cover')->first();
+        $links = Link::all()->select('name','link');
+        if (!$information) {
+            return response()->json([
+                'message' => 'No information found',
+            ], 404);
+        }
+
+        return response()->json([
+            'information' => $information,
+            'links' => $links,
+        ], 200);
+    }
+
 }

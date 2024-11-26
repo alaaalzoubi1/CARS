@@ -54,6 +54,21 @@ class CategoryController extends Controller
             'categories' => $categories
         ]);
     }
+    /** * Display a paginated list of categories.
+     * * * @return \Illuminate\Http\JsonResponse
+     */
+    public function showCategories()
+    {
+         $categories = Category::paginate(5);
+         if (!$categories)
+             return response()->json([
+                'message' => 'no categories found!'
+             ],404);
+         return response()
+             ->json([
+                 'categories' => $categories,
+                 ]);
+    }
     public function delete($id)
     {
         if (!is_numeric($id) || $id <= 0) {

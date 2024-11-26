@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
@@ -101,5 +102,49 @@ class ReservationController extends Controller
             'message' => 'Reservation status updated successfully',
             'reservation' => $reservation,
         ], 200);
+    }
+    public function store(Request $request)
+    { // Validate the request data
+         $validatedData = $request->validate([
+             'car_id' => 'required|exists:cars,id',
+             'with_driver' => 'required|boolean',
+             'start' => 'required|date|after_or_equal:today',
+             'end' => 'required|date|after:start',
+             ]);
+         // Create a new reservation
+        $user_id = Auth::user()->getAuthIdentifier();
+         $reservation = Reservation::create([
+             'user_id' => $user_id,
+             'car_id' => $validatedData['car_id'],
+             'with_driver' => $validatedData['with_driver'],
+             'start' => $validatedData['start'],
+             'end' => $validatedData['end'],
+             'status' => 'pending',
+         ]);
+         return response()->json([
+             'message' => 'Reservation created successfully',
+             'reservation' => $reservation, ],
+             201);
+    }
+    /**
+     * Display a paginated list of reservations for the authenticated user.
+     *
+     * * @return \Illuminate\Http\JsonResponse
+     */
+    public function myReservations()
+    {
+         $user = Auth::user();
+        $reservations = Reservation::where('user_id', $user->id)
+            ->with(['car' => function($query)
+            {
+                $query->with(['images' => function($query)
+                {
+                    $query->where('is_main', true);
+                }]);
+            }])
+            ->paginate(5);
+         return response()->json([
+             'reservations' => $reservations
+         ]);
     }
 }

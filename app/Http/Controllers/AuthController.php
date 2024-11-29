@@ -81,7 +81,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token)
+    public function respondWithToken($token)
     {
         return response()->json([
             'access_token' => $token,

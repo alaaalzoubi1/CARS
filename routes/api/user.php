@@ -8,6 +8,10 @@ use App\Http\Controllers\InformationController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\NewPasswordController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\VerificationController;
+
+Route::post('send-verification-code', [VerificationController::class, 'sendVerificationCode']);
+Route::post('verify-code', [VerificationController::class, 'verifyCode']);
 
 //Route::middleware(['web'])->group(function () {
 //    Route::get('login/google', [GoogleController::class, 'redirectToGoogle'])->name('login.google');

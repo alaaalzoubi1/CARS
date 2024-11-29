@@ -10,8 +10,8 @@ use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
-class User extends Authenticatable implements JWTSubject
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+class User extends Authenticatable implements JWTSubject,MustVerifyEmail
 {
     use HasRoles, HasApiTokens, HasFactory, Notifiable;
 

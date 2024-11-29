@@ -15,20 +15,20 @@ class CreateCarFeaturesTable extends Migration
     {
         Schema::create('car_features', function (Blueprint $table) {
             $table->id();
-            $table->string('gear');
-            $table->string('engine');
-            $table->string('color');
-            $table->integer('seats');
-            $table->integer('doors');
-            $table->integer('luggage');
-            $table->boolean('sensors');
-            $table->boolean('bluetooth');
-            $table->boolean('gcc');
-            $table->boolean('camera');
-            $table->boolean('lcd');
-            $table->boolean('safety');
-            $table->boolean('radio');
-            $table->boolean('Mb3_CD');
+            $table->string('gear')->nullable();
+            $table->string('engine')->nullable();
+            $table->string('color')->nullable();
+            $table->integer('seats')->nullable();
+            $table->integer('doors')->nullable();
+            $table->integer('luggage')->nullable();
+            $table->boolean('sensors')->nullable();
+            $table->boolean('bluetooth')->nullable();
+            $table->boolean('gcc')->nullable();
+            $table->boolean('camera')->nullable();
+            $table->boolean('lcd')->nullable();
+            $table->boolean('safety')->nullable();
+            $table->boolean('radio')->nullable();
+            $table->boolean('Mb3_CD')->nullable();
             $table->unsignedBigInteger('car_id');
             $table->timestamps();
 

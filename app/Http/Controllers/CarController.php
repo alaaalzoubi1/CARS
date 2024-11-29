@@ -31,66 +31,51 @@ class CarController extends Controller
         try {
             // Create rent details
             $rent = Rent::create([
-                'daily' => $validatedData['daily'],
-                'weekly' => $validatedData['weekly'],
-                'monthly' => $validatedData['monthly'],
-                'daily_with_driver' => $validatedData['daily_with_driver'],
-                'weekly_with_driver' => $validatedData['weekly_with_driver'],
-                'monthly_with_driver' => $validatedData['monthly_with_driver'],
+                'daily' => $validatedData['daily'] ?? null,
+                'weekly' => $validatedData['weekly'] ?? null,
+                'monthly' => $validatedData['monthly'] ?? null,
+                'daily_with_driver' => $validatedData['daily_with_driver'] ?? null,
+                'weekly_with_driver' => $validatedData['weekly_with_driver'] ?? null,
+                'monthly_with_driver' => $validatedData['monthly_with_driver'] ?? null,
             ]);
 
             // Create car with new date columns
             $car = Car::create([
-                'trademark' => $validatedData['trademark'],
-                'model' => $validatedData['model'],
-                'delivery' => $validatedData['delivery'],
-                'details' => $validatedData['details'],
+                'trademark' => $validatedData['trademark'] ?? null,
+                'model' => $validatedData['model'] ?? null,
+                'delivery' => $validatedData['delivery'] ?? null,
+                'details' => $validatedData['details'] ?? null,
                 'rent_id' => $rent->id,
-                'insurance' => $validatedData['insurance'],
-                'KMs' => $validatedData['KMs'],
-                'deposit' => $validatedData['deposit'],
-                'min_age' => $validatedData['min_age'],
-                'category_id' => $validatedData['category_id'],
-                'date_of_manufacture' => $validatedData['date_of_manufacture'],
-                'registration_date' => $validatedData['registration_date'],
+                'insurance' => $validatedData['insurance'] ?? null,
+                'KMs' => $validatedData['KMs'] ?? null,
+                'deposit' => $validatedData['deposit'] ?? null,
+                'min_age' => $validatedData['min_age'] ?? null,
+                'category_id' => $validatedData['category_id'] ?? null,
+                'date_of_manufacture' => $validatedData['date_of_manufacture'] ?? null,
+                'registration_date' => $validatedData['registration_date'] ?? null,
             ]);
 
             // Create car features
             CarFeature::create([
-                'gear' => $validatedData['gear'],
-                'engine' => $validatedData['engine'],
-                'color' => $validatedData['color'],
-                'seats' => $validatedData['seats'],
-                'doors' => $validatedData['doors'],
-                'luggage' => $validatedData['luggage'],
-                'sensors' => $validatedData['sensors'],
-                'bluetooth' => $validatedData['bluetooth'],
-                'gcc' => $validatedData['gcc'],
-                'camera' => $validatedData['camera'],
-                'lcd' => $validatedData['lcd'],
-                'safety' => $validatedData['safety'],
-                'radio' => $validatedData['radio'],
-                'Mb3_CD' => $validatedData['Mb3_CD'],
+                'gear' => $validatedData['gear'] ?? null,
+                'engine' => $validatedData['engine'] ?? null,
+                'color' => $validatedData['color'] ?? null,
+                'seats' => $validatedData['seats'] ?? null,
+                'doors' => $validatedData['doors'] ?? null,
+                'luggage' => $validatedData['luggage'] ?? null,
+                'sensors' => $validatedData['sensors'] ?? null,
+                'bluetooth' => $validatedData['bluetooth'] ?? null,
+                'gcc' => $validatedData['gcc'] ?? null,
+                'camera' => $validatedData['camera'] ?? null,
+                'lcd' => $validatedData['lcd'] ?? null,
+                'safety' => $validatedData['safety'] ?? null,
+                'radio' => $validatedData['radio'] ?? null,
+                'Mb3_CD' => $validatedData['Mb3_CD'] ?? null,
                 'car_id' => $car->id,
             ]);
-            $imageName = time() . '-' . $validatedData['main_image']->getClientOriginalName();
-            $imagePath = $validatedData['main_image']->storeAs('car_images', $imageName, 'public');
-            CarImage::create([
-                'car_id' => $car->id,
-                'image' => $imagePath,
-                'is_main' => true,
-            ]);
 
-            // Handle image uploads
-            foreach ($request->file('images') as $image) {
-                $imageName = time() . '-' . $image->getClientOriginalName();
-                $imagePath = $image->storeAs('car_images', $imageName, 'public');
-
-                CarImage::create([
-                    'car_id' => $car->id,
-                    'image' => $imagePath,
-                ]);
-            }
+            // Handle image uploads (if needed)
+            // ...
 
             DB::commit();
 

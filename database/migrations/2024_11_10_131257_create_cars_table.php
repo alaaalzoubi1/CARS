@@ -13,20 +13,20 @@ return new class extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
              $table->id();
-             $table->string('trademark');
-             $table->string('model');
-             $table->string('delivery');
-             $table->text('details');
+             $table->string('trademark')->nullable();
+             $table->string('model')->nullable();
+             $table->string('delivery')->nullable();
+             $table->text('details')->nullable();
              $table->unsignedBigInteger('rent_id');
              $table->foreign('rent_id')->references('id')->on('rents')->onDelete('cascade');
-             $table->string('insurance');
-             $table->string('KMs');
-             $table->string('deposit');
-             $table->string('min_age');
-             $table->unsignedBigInteger('category_id');
+             $table->string('insurance')->nullable();
+             $table->string('KMs')->nullable();
+             $table->string('deposit')->nullable();
+             $table->string('min_age')->nullable();
+             $table->unsignedBigInteger('category_id')->nullable();
              $table->boolean('is_hidden')->default(false);
-             $table->year('date_of_manufacture');
-             $table->year('registration_date');
+             $table->year('date_of_manufacture')->nullable();
+             $table->year('registration_date')->nullable();
              $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
              $table->timestamps();
         });

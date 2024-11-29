@@ -59,7 +59,7 @@ class CategoryController extends Controller
      */
     public function showCategories()
     {
-         $categories = Category::paginate(5);
+         $categories = Category::where('is_deleted',false)->get();
          if (!$categories)
              return response()->json([
                 'message' => 'no categories found!'

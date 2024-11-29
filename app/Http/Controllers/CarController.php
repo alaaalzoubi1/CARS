@@ -81,6 +81,7 @@ class CarController extends Controller
 
             return response()->json([
                 'message' => 'Car and related data created successfully',
+                'id' => $car->id
             ], 201);
 
         } catch (\Exception $e) {

@@ -420,7 +420,7 @@ class CarController extends Controller
     { // Retrieve cars where is_hidden is false and category_id matches, paginate results by 5
          $cars = Car::where('is_hidden', false)
              ->where('category_id', $category_id)
-             ->with(['images' => function($query)
+             ->with(['rent','images' => function($query)
              { $query->where('is_main', true);
              }])
              ->paginate(10);

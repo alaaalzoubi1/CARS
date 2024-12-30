@@ -20,6 +20,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::get('categories', [CategoryController::class, 'showCategories']);
 Route::get('cars', [CarController::class, 'showCars']);
 Route::get('car/{id}',[CarController::class,'details']);
+Route::get('/cars/search', [CarController::class, 'search']);
 Route::get('carsByCategory/{id}', [CarController::class, 'showCarsByCategory_user']);
 Route::get('information', [InformationController::class, 'show_user']);
 Route::post('forget-password',[NewPasswordController::class,'forgetPassword']);

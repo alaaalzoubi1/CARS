@@ -428,6 +428,38 @@ class CarController extends Controller
              'cars' => $cars, ]
          );
     }
+    public function search(Request $request)
+    {
+        $query = Car::query();
+
+        if ($request->filled('trademark')) {
+            $query->where('trademark', 'like', '%' . $request->trademark . '%');
+        }
+
+        if ($request->filled('model')) {
+            $query->where('model', 'like', '%' . $request->model . '%');
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->filled('min_age')) {
+            $query->where('min_age', '>=', $request->min_age);
+        }
+
+        if ($request->filled('date_of_manufacture')) {
+            $query->where('date_of_manufacture', $request->date_of_manufacture);
+        }
+
+        // Fetch the filtered results
+        $cars = $query
+            ->with(['rent','images' => function($query)
+            { $query->where('is_main', true);
+            }])->paginate(10);
+
+        return response()->json($cars);
+    }
 
 
 
